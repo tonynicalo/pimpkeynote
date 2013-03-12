@@ -7,6 +7,9 @@ require 'fileutils'
 puts "What is the name of your slidedeck?"
 title = STDIN.gets.chomp()
 
+puts "If you have an AngelList page enter your id (from https://angel.co/caliper/embed):"
+angel_id = STDIN.gets.chomp()
+
 SLIDES_PATH = "./assets/images-1"
 HTML_TOP = <<-EOF
 <html>
@@ -68,6 +71,16 @@ slide_images.each {|s|
 slides = slides.sort_by { |key, value| key }
 
 slides.pop
+
+# if angel list add follow button
+if angel_id
+  pimped_index += %{
+    <div id="angel-list">
+      <a href="https://angel.co/angellist?follow=1&type=Startup&id=#{angel_id}"></a>
+      <script src="https://angel.co/javascripts/embed.js" type="text/javascript"></script>
+    </div>
+  }
+end
 
 # Build out nav
 pimped_index += %{<div id="nav">}
