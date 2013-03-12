@@ -23,7 +23,6 @@ HTML_TOP = <<-EOF
 </head>
 <body>
   <div id="header">
-    <div id="nav">
 EOF
 
 HTML_BOTTOM = <<-EOF
@@ -53,8 +52,6 @@ PIMPED_ASSETS_PATH = "./assets"
   FileUtils.cp_r File.join(ASSETS_PATH, assets), File.join(PIMPED_ASSETS_PATH, assets)
 end
 
-# TODO: Set up some default css styling
-
 # build pimped index page and link to slides
 pimped_index = HTML_TOP
 
@@ -73,23 +70,19 @@ slides = slides.sort_by { |key, value| key }
 slides.pop
 
 # Build out nav
+pimped_index += %{<div id="nav">}
 slides.each do |slide|
   pimped_index += %{<a href="##{slide[0]}">#{slide[0]}</a>}
 end
 
-# close up nav
-pimped_index += <<-EOF
-      </div>
-    </div>
-  EOF
+# close up nav and header
+pimped_index += "</div></div>"
 
 # build out image slides
 slides.each do |slide|
-  pimped_index += <<-EOF
-  <div id="#{slide[0]}" class="slide">
-    <img src="#{File.join(SLIDES_PATH, slide[1])}">
-  </div>
-  EOF
+  pimped_index += %{<div id="#{slide[0]}" class="slide">}
+  pimped_index += %{<img src="#{File.join(SLIDES_PATH, slide[1])}">}
+  pimped_index << "</div>"
 end
 
 File.write("./pimped-index.html", pimped_index + HTML_BOTTOM)
