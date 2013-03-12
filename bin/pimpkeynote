@@ -29,14 +29,14 @@ EOF
 HTML_BOTTOM = <<-EOF
 <script>
 $(document).ready(function() {
+  // Adjust height of slides
+  $(".slide").height($(window).height());
+
   var deck = new $.scrolldeck({
     slides: ".slide",
     buttons: "#nav a",
     easing: 'easeInOutExpo'
   });
-
-  // Adjust height of slides
-  //$(".slide").height($(window).height());
 
 });
 </script>
