@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+# TODO: check if assets exists so that this is being ran in a keynote export
+
+puts "What is the name of your slidedeck?"
+title = STDIN.gets.chomp()
+
+SLIDES_PATH = "./assets/images-1"
+HTML_TOP = <<-EOF
+<html>
+<head>
+  <meta name="auhtor" content="Coherence"/>
+  <title>#{title}</title>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/1.4.3/jquery.scrollTo.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="assets/js/jquery.scrollorama.js"></script>
+  <script src="assets/js/jquery.scrolldeck.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div id="nav">
+EOF
+
+HTML_BOTTOM = <<-EOF
+<script>
+$(document).ready(function() {
+  var deck = new $.scrolldeck({
+    buttons: '.nav-button',
+    easing: 'easeInOutExpo'
+  });
+});
+</script>
+</body>
+</html>
+EOF
+
+# Copy requried JS to project
+JS_PATH = File.expand_path("../../assets/js", __FILE__)
+PIMPED_JS_PATH = File.join("./assets", "js")
+puts "Copying #{PIMPED_JS_PATH} to #{JS_PATH}"
+FileUtils.cp_r JS_PATH, PIMPED_JS_PATH
+
+# TODO: Set up some default css styling
+
+# build pimped index page and link to slides
+pimped_index = HTML_TOP
+
+# Find slide images
+slide_images = Dir.entries(SLIDES_PATH).reject {
+  |f| [".", "..", "thumbnail.jpeg"].include?(f)
+}
+
+slides = {}
+slide_images.each {|s|
+  number = (s[/s(.*)\.b/,1] || 0).to_i + 1
+  slides[number] = s
+}
+slides = slides.sort_by { |key, value| key }
+
+slides.pop
+
+# Build out nav
+slides.each do |slide|
+  pimped_index += %{<a href="##{slide[0]}" class="nav-button">#{slide[0]}</a>}
+end
+
+# close up nav
+pimped_index += <<-EOF
+      </div>
+    </div>
+  EOF
+
+# build out image slides
+slides.each do |slide|
+  pimped_index += <<-EOF
+    <div class="slide" id="#{slide[0]}">
+      <img src="#{File.join(SLIDES_PATH, slide[1])}">
+    </div>
+  EOF
+end
+
+File.write("./pimped-index.html", pimped_index + HTML_BOTTOM)
