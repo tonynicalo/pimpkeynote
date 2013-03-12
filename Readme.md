@@ -23,8 +23,3 @@ replace the `index.html` before uploading to your http server.
 ## AngelList
 To get the angelList follow button you need to know your company id,
 which you can get out of the embed section on AngelList.
-
-## Thanks
-Thanks to [John Polacek](http://johnpolacek.github.com/) for his work on
-[ScrollDeck](http://johnpolacek.github.com/scrolldeck.js/) which we use
-on the created deck
