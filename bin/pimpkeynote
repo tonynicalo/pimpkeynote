@@ -49,7 +49,7 @@ ASSETS_PATH = File.expand_path("../../assets", __FILE__)
 PIMPED_ASSETS_PATH = "./assets"
 
 ["js", "css"].each do |assets|
-  puts "Copying #{File.join(ASSETS_PATH, assets)} to #{File.join(PIMPED_ASSETS_PATH, assets)}"
+  #puts "Copying #{File.join(ASSETS_PATH, assets)} to #{File.join(PIMPED_ASSETS_PATH, assets)}"
   FileUtils.cp_r File.join(ASSETS_PATH, assets), File.join(PIMPED_ASSETS_PATH, assets)
 end
 
@@ -93,3 +93,4 @@ slides.each do |slide|
 end
 
 File.write("./pimped-index.html", pimped_index + HTML_BOTTOM)
+puts "Done. Open up pimped-index.html to check out the new presentation"
